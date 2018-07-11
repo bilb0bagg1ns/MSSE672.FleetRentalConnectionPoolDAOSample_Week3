@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================================= -->
+<!--     FleetRentalNonServer Project                                        -->
+<!--                                                                         -->
+<!--  NEED TO READ TUTORIAL ON ANT THAT WAS SUPPLIED BEFORE USING THIS       -->
+<!-- ======================================================================= -->
+
+<project name="JDBCDAOSample" default="compile" basedir="../..">
+
+
+  <!-- ========================================
+        Project Properties
+       ========================================  -->
+
+  <property name="home"               value="JDBCDAOSample"/>
+  <property name="src.dir"            value="${home}/src"/>     <!-- all .java files (code) is under here -->
+  <property name="build.dir"          value="${home}/classes"/> <!-- compiled code goes here -->
+  <property name="lib.dir"            value="${home}/lib"/>     <!-- any external jar and libraries (ex: JDBC libs) go here -->
+  <property name="prop.dir"           value="${home}/config/"/> <!-- contains application.properties file -->
+  <property name="javadoc.dir"        value="${home}/docs/javadoc"/>  
+  <!-- Don't use <property name="log.dir"            value="../Logs/${home}/"/> -->  
+   
+  <!-- end property definition -->
+
+  <!-- ===================================================================
+       build the various classpaths needed  - these are the pieces
+       Here we load for example jar file mysql-connector-java-X.X.XX-bin.jar 
+       needed for making JDBC calls using MySql    
+       =================================================================== -->
+       
+  <path id="classpath.project.ref">
+    <fileset dir="${lib.dir}" >
+      <include name="**/*.jar" />
+      <include name="**/*.zip" />
+    </fileset >
+  </path>
+
+
+    <!-- ===================================================================
+       The init target just sets the timestamp for all following operations
+       =================================================================== -->
+  <target name="init">
+    <tstamp/>
+  </target>
+
+
+    <!-- ===================================================================
+       Creates the build directory if necessary
+       =================================================================== -->
+  <target name="prepare" depends="init">
+    <mkdir dir="${build.dir}" /> 
+    
+    <!-- not used 
+    <mkdir dir="${log.dir}" />
+    -->
+  </target>
+
+
+  <!-- ===================================================================
+       Deletes all of the *.class files the build directory, but doesn't
+       delete the empty directory tree, or any other files in the tree. If
+       *.properties and *.xml files are to be deleted too, then add a
+       fileset tag for them too.
+       =================================================================== -->
+  <target name="clean" depends="prepare">
+    <delete>
+      <fileset dir="${build.dir}" includes="**/*.*" />
+    </delete>
+  </target>
+
+
+  <!-- ===================================================================
+       Compiles.
+       =================================================================== -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" >
+        <classpath>
+          <path refid="classpath.project.ref" />
+        </classpath>
+    </javac>
+  </target>  
+   
+
+  <!-- ===================================================================
+       Creates the API documentation
+       =================================================================== -->
+  <target name="doc" depends="prepare">
+    <mkdir dir="${javadoc.dir}"/>
+    <delete>
+      <fileset dir="${javadoc.dir}" excludes="**/*.gif" />
+    </delete>
+    <javadoc packagenames="${FleetRental}.*"
+             sourcepath="${src.dir}"
+             destdir="${javadoc.dir}"
+             author="true"
+             version="true"
+             private="true"
+             windowtitle="${javadoc.name}"
+             doctitle="${javadoc.name}"
+             bottom="${javadoc.bottom}">
+      <classpath refid="classpath.compile.ref" />
+    </javadoc>
+  </target>
+
+
+
+  <!-- ===================================================================
+       Runs Test Driver
+       =================================================================== -->
+  <target name="runTestDriver" depends="compile">
+       <java classname="com.jdbcdaosample.driver.TestDriver" fork="yes" maxmemory="640m">
+         <classpath>
+           <path location="${build.dir}" />
+           <path refid="classpath.project.ref" />
+         </classpath>
+         <sysproperty key="prop_location" value="${prop.dir}application.properties"/>
+         <jvmarg value="-Xrs"/>
+       </java>
+  </target>
+
+		
+</project>

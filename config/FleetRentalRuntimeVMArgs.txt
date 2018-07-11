@@ -1,0 +1,1 @@
+-Dlog4j_prop_location=C:\EDrive\Regis\MSCS672\Online\Postings\Week3JavaDatabaseConnectivity(JDBC)\Supplemental\JDBC\Sample\FleetRentalJDBCDAOSample\config\log4j.properties -Dprop_location=C:\EDrive\Regis\MSCS672\Online\Postings\Week3JavaDatabaseConnectivity(JDBC)\Supplemental\JDBC\Sample\FleetRentalConnectionPoolDAOSample\config\application.properties
